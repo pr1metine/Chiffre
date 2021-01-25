@@ -21,7 +21,7 @@ public class Vigenere {
         }
 
         frequencyAnalysis(INPUT, 7)
-                                   .forEach(System.out::println);
+                .forEach(System.out::println);
     }
 
     public static HashMap<String, ArrayList<Integer>> findReoccurringPassages(String input, int passageLength) {
