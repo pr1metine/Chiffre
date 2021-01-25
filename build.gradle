@@ -4,13 +4,25 @@
  * This is a general purpose Gradle build.
  * Learn more about Gradle by exploring our samples at https://docs.gradle.org/6.8.1/samples
  */
- plugins {
+plugins {
     id('application')
- }
+    id('idea')
+}
 
- targetCompatibility = 11
- sourceCompatibility = 11
+sourceCompatibility = 11
+targetCompatibility = 11
 
- application {
-    mainClass = 'de.pr1meti.chiffre.Vignere'
- }
+group = 'de.pr1meti'
+version = 'v0.1.0'
+
+application {
+    mainClass.set('de.pr1meti.chiffre.Vigenere')
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.junit.jupiter:junit-jupiter:5.7.0'
+}
