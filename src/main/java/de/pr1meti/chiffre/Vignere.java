@@ -13,6 +13,7 @@ public class Vignere {
         for (int i = 3; i <= 100; i++) {
             findAndPrintOccurences(i);
         }
+        frequencyAnalysis(7);
     }
 
     public static void findAndPrintOccurences(int stringLength) {
@@ -33,5 +34,24 @@ public class Vignere {
                 System.out.printf("%s has %4d occurences at %s%n", k, v.size(), res) ;
             }
         });
+    }
+
+    public static void frequencyAnalysis(int keyLength) {
+        ArrayList<HashMap<Character, Integer>> list = new ArrayList<>(keyLength);
+        for (int i = 0; i < keyLength; i++) {
+            list.add(new HashMap<>());
+        }
+        for (int i = 0; i < INPUT.length(); i += keyLength) {
+            for (int j = 0; j < keyLength; j++) {
+                char c = INPUT.charAt(i + j);
+                HashMap<Character, Integer> tmpMap = list.get(j);
+                tmpMap.putIfAbsent(c, 0);
+                int count = tmpMap.get(c) + 1;
+                tmpMap.put(c, count);
+            }
+        }
+
+        list.stream()
+            .forEach(System.out::println);
     }
 }
