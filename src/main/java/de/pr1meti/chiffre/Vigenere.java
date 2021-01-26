@@ -35,7 +35,6 @@ public class Vigenere {
         }
 
         return res;
-
     }
 
     public static ArrayList<HashMap<Character, AtomicInteger>> frequencyAnalysis(String input, int keyLength) {
