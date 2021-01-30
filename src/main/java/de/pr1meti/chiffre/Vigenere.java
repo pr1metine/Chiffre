@@ -1,9 +1,9 @@
 package de.pr1meti.chiffre;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Vigenere {
     public static final String INPUT = "XZNIEITBVRYAKIHESSYGUXDAYFQNNEDWBPPAVRZVIYZVSXNPGBXKIVXMNSIPQIABJTEAWVVYEMAIFVYWIEINNWGEOIZTEMYNFRKSEHRRXXEDEJMENESMZEAYRNKFWGTUIYZIVGVRHRVTKKERFGUERCLGIAWVRARPGZVSGUMPAKEFRJVGUERQEJBIARIMREVNTHRXMVNRBVJXXERFYAWYOPYEAWJKQCJRGUAAVVVFDIXGIYFVEVXEZIWBIEIVMJEMAQFLVNHNHRKCUJGOEBVGSURRNETIEPNPVIXRVTXYTYAHQTNIVUMRKZMPNRQXMIIYIIHIBIEIVMLNKRRGKVFJRRZLJERVGUAFFJRQNGNIVQQVKMEVMIVAVNARRABTHMAHVXJEVXVVMZSGUIAERGIZMPAYEYGIABTHXZMG";
@@ -11,12 +11,10 @@ public class Vigenere {
     public static void main(String[] args) {
         for (int i = 3; i <= 100; i++) {
             findReoccurringPassages(INPUT, i).forEach((k, v) -> {
-                if (v.size() > 1) {
-                    String res = v.stream()
-                                  .map(ii -> "" + ii)
-                                  .collect(Collectors.joining(","));
-                    System.out.printf("%s has %4d occurrences at %s%n", k, v.size(), res);
-                }
+                String res = v.stream()
+                              .map(ii -> "" + ii)
+                              .collect(Collectors.joining(","));
+                System.out.printf("%s has %4d occurrences at %s%n", k, v.size(), res);
             });
         }
 
@@ -24,37 +22,23 @@ public class Vigenere {
                 .forEach(System.out::println);
     }
 
-    public static HashMap<String, ArrayList<Integer>> findReoccurringPassages(String input, int passageLength) {
-        HashMap<String, ArrayList<Integer>> res = new HashMap<>();
-
-        for (int i = 0; i <= input.length() - passageLength; i++) {
-            String cur = input.substring(i, i + passageLength);
-            res.putIfAbsent(cur, new ArrayList<>());
-            res.get(cur)
-               .add(i);
-        }
-
+    public static Map<String, List<Integer>> findReoccurringPassages(String input, int passageLength) {
+        Map<String, List<Integer>> res;
+        res = IntStream.rangeClosed(0, input.length() - passageLength)
+                       .boxed()
+                       .collect(Collectors.groupingBy(i -> input.substring(i, i + passageLength)));
+        res.entrySet()
+           .removeIf(stringListEntry -> stringListEntry.getValue()
+                                                       .size() <= 1);
         return res;
     }
 
-    public static ArrayList<HashMap<Character, AtomicInteger>> frequencyAnalysis(String input, int keyLength) {
-        ArrayList<HashMap<Character, AtomicInteger>> res = new ArrayList<>(keyLength);
-        for (int i = 0; i < keyLength; i++) {
-            res.add(new HashMap<>());
-        }
-        for (int i = 0; i < input.length(); i += keyLength) {
-            for (int j = 0; j < keyLength; j++) {
-                if (i + j >= input.length()) {
-                    return res;
-                }
-                char c = input.charAt(i + j);
-                HashMap<Character, AtomicInteger> tmpMap = res.get(j);
-                tmpMap.putIfAbsent(c, new AtomicInteger());
-                tmpMap.get(c)
-                      .incrementAndGet();
-            }
-        }
-
-        return res;
+    public static List<Map<Character, Long>> frequencyAnalysis(String input, int keyLength) {
+        return IntStream.range(0, keyLength)
+                        .mapToObj(i -> IntStream.iterate(i, ii -> ii < input.length(), ii -> ii + keyLength)
+                                                .mapToObj(input::charAt)
+                                                .collect(Collectors.groupingBy(c -> c, Collectors.counting())))
+                        .collect(Collectors.toUnmodifiableList())
+                ;
     }
 }

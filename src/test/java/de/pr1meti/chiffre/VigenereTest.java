@@ -4,18 +4,17 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class VigenereTest {
     public static final String INPUT = "HELLOHELLOLOLO";
-    public static HashMap<String, ArrayList<Integer>> result5Len;
-    public static HashMap<String, ArrayList<Integer>> result2Len;
-    public static ArrayList<HashMap<Character, AtomicInteger>> result1KeyLen;
-    public static ArrayList<HashMap<Character, AtomicInteger>> result8KeyLen;
+    public static Map<String, List<Integer>> result5Len;
+    public static Map<String, List<Integer>> result2Len;
+    public static List<Map<Character, Long>> result1KeyLen;
+    public static List<Map<Character, Long>> result8KeyLen;
 
     @BeforeAll
     static void initResult() {
@@ -43,17 +42,13 @@ public class VigenereTest {
     @DisplayName("Test function frequencyAnalysis assuming a key length of 1")
     void testFA1() {
         assertEquals(2, result1KeyLen.get(0)
-                                     .get('H')
-                                     .get());
+                                     .get('H'));
         assertEquals(2, result1KeyLen.get(0)
-                                     .get('E')
-                                     .get());
+                                     .get('E'));
         assertEquals(6, result1KeyLen.get(0)
-                                     .get('L')
-                                     .get());
+                                     .get('L'));
         assertEquals(4, result1KeyLen.get(0)
-                                     .get('O')
-                                     .get());
+                                     .get('O'));
     }
 
     @Test
