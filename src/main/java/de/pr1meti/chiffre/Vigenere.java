@@ -1,7 +1,9 @@
 package de.pr1meti.chiffre;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.ToLongFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -18,8 +20,10 @@ public class Vigenere {
             });
         }
 
-        frequencyAnalysis(INPUT, 7)
-                .forEach(System.out::println);
+        List<Map<Character, Long>> frequencyAnalysis = frequencyAnalysis(INPUT, 7);
+        frequencyAnalysis.forEach(System.out::println);
+        List<Map<Character, Long>> mostFrequentLetters = getMostFrequentLetters(frequencyAnalysis, 3, 'E', false);
+        mostFrequentLetters.forEach(System.out::println);
     }
 
     public static Map<String, List<Integer>> findReoccurringPassages(String input, int passageLength) {
@@ -39,6 +43,32 @@ public class Vigenere {
                                                 .mapToObj(input::charAt)
                                                 .collect(Collectors.groupingBy(c -> c, Collectors.counting())))
                         .collect(Collectors.toUnmodifiableList())
+                ;
+    }
+
+    public static char shift(char toBeShifted, char key, boolean clockwiseShiftDirection) {
+        int toBeShiftedInt = Character.toUpperCase(toBeShifted) - 'A';
+        int keyInt = Character.toUpperCase(key) - 'A';
+        int range = 'Z' - 'A' + 1;
+        return (char) ('A' + (toBeShiftedInt + (clockwiseShiftDirection ? keyInt : -keyInt) + range) % range);
+    }
+
+    public static List<Map<Character, Long>> getMostFrequentLetters(List<Map<Character, Long>> fAInput, int numberOfReturnedTopLetters, char keyToShiftWith, boolean clockwiseShiftDirection) {
+        Comparator<Map.Entry<Character, Long>> comparator;
+        comparator = Comparator.comparingLong((ToLongFunction<Map.Entry<Character, Long>>) Map.Entry::getValue)
+                               .reversed();
+        return fAInput.stream()
+                      .map(Map::entrySet)
+                      .map(entries -> entries.stream()
+                                             .sorted(comparator)
+                                             .limit(numberOfReturnedTopLetters)
+                                             .map(characterLongEntry ->
+                                                     Map.entry(
+                                                             shift(characterLongEntry.getKey(), keyToShiftWith, clockwiseShiftDirection),
+                                                             characterLongEntry.getValue()
+                                                     ))
+                                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)))
+                      .collect(Collectors.toList())
                 ;
     }
 }

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class VigenereTest {
     public static final String INPUT = "HELLOHELLOLOLO";
@@ -15,6 +15,7 @@ public class VigenereTest {
     public static Map<String, List<Integer>> result2Len;
     public static List<Map<Character, Long>> result1KeyLen;
     public static List<Map<Character, Long>> result8KeyLen;
+    public static List<Map<Character, Long>> result1MostFreq;
 
     @BeforeAll
     static void initResult() {
@@ -22,6 +23,7 @@ public class VigenereTest {
         result2Len = Vigenere.findReoccurringPassages(INPUT, 2);
         result1KeyLen = Vigenere.frequencyAnalysis(INPUT, 1);
         result8KeyLen = Vigenere.frequencyAnalysis(INPUT, 8);
+        result1MostFreq = Vigenere.getMostFrequentLetters(result1KeyLen, 2, 'A', true);
     }
 
     @Test
@@ -56,5 +58,21 @@ public class VigenereTest {
     void testFA7() {
         assertEquals(1, result8KeyLen.get(7)
                                      .size());
+    }
+
+    @Test
+    void testShift() {
+        assertEquals('A', Vigenere.shift('A','A',true));
+        assertEquals('A', Vigenere.shift('A','A',false));
+        assertEquals('B', Vigenere.shift('A','b',true));
+        assertEquals('Z', Vigenere.shift('A','b',false));
+    }
+
+    @Test
+    void testGMFL1() {
+        assertEquals(6, result1MostFreq.get(0).get('L'));
+        assertEquals(4, result1MostFreq.get(0).get('O'));
+        assertNull(result1MostFreq.get(0).get('E'));
+        assertNull(result1MostFreq.get(0).get('H'));
     }
 }
