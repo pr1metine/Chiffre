@@ -7,7 +7,8 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class VigenereTest {
     public static final String INPUT = "HELLOHELLOLOLO";
@@ -19,11 +20,11 @@ public class VigenereTest {
 
     @BeforeAll
     static void initResult() {
-        result5Len = Vigenere.findReoccurringPassages(INPUT, 5);
-        result2Len = Vigenere.findReoccurringPassages(INPUT, 2);
-        result1KeyLen = Vigenere.frequencyAnalysis(INPUT, 1);
-        result8KeyLen = Vigenere.frequencyAnalysis(INPUT, 8);
-        result1MostFreq = Vigenere.getMostFrequentLetters(result1KeyLen, 2, 'A', true);
+        result5Len = CryptUtils.findReoccurringPassages(INPUT, 5);
+        result2Len = CryptUtils.findReoccurringPassages(INPUT, 2);
+        result1KeyLen = CryptUtils.frequencyAnalysis(INPUT, 1);
+        result8KeyLen = CryptUtils.frequencyAnalysis(INPUT, 8);
+        result1MostFreq = CryptUtils.getMostFrequentLetters(result1KeyLen, 2, 'A', true);
     }
 
     @Test
@@ -62,17 +63,21 @@ public class VigenereTest {
 
     @Test
     void testShift() {
-        assertEquals('A', Vigenere.shift('A','A',true));
-        assertEquals('A', Vigenere.shift('A','A',false));
-        assertEquals('B', Vigenere.shift('A','b',true));
-        assertEquals('Z', Vigenere.shift('A','b',false));
+        assertEquals('A', CryptUtils.shift('A', 'A', true));
+        assertEquals('A', CryptUtils.shift('A', 'A', false));
+        assertEquals('B', CryptUtils.shift('A', 'b', true));
+        assertEquals('Z', CryptUtils.shift('A', 'b', false));
     }
 
     @Test
     void testGMFL1() {
-        assertEquals(6, result1MostFreq.get(0).get('L'));
-        assertEquals(4, result1MostFreq.get(0).get('O'));
-        assertNull(result1MostFreq.get(0).get('E'));
-        assertNull(result1MostFreq.get(0).get('H'));
+        assertEquals(6, result1MostFreq.get(0)
+                                       .get('L'));
+        assertEquals(4, result1MostFreq.get(0)
+                                       .get('O'));
+        assertNull(result1MostFreq.get(0)
+                                  .get('E'));
+        assertNull(result1MostFreq.get(0)
+                                  .get('H'));
     }
 }
