@@ -30,7 +30,8 @@ public class CryptUtils {
         int range = 'Z' - 'A' + 1;
         return (char) ('A' + (toBeShiftedInt + (clockwiseShiftDirection
                                                 ? keyInt
-                                                : -keyInt) + range) % range);
+                                                : -keyInt) + range)
+                             % range);
     }
 
     /**
@@ -45,12 +46,18 @@ public class CryptUtils {
     public static List<Map<Character, Long>> frequencyAnalysis(String input,
                                                                int keyLength) {
         return IntStream.range(0, keyLength)
-                        .mapToObj(i -> IntStream.iterate(i,
-                                ii -> ii < input.length(),
-                                ii -> ii + keyLength)
-                                                .mapToObj(input::charAt)
-                                                .collect(Collectors.groupingBy(c -> c,
-                                                        Collectors.counting())))
+                        .mapToObj(
+                                i -> IntStream.iterate(i,
+                                        ii -> ii < input.length(),
+                                        ii -> ii + keyLength)
+                                              .mapToObj(input::charAt)
+                                              .collect(
+                                                      Collectors.groupingBy(
+                                                              c -> c,
+                                                              Collectors.counting()
+                                                      )
+                                              )
+                        )
                         .collect(Collectors.toUnmodifiableList())
                 ;
     }
@@ -70,12 +77,15 @@ public class CryptUtils {
 
         res = IntStream.rangeClosed(0, input.length() - passageLength)
                        .boxed()
-                       .collect(Collectors.groupingBy(i -> input.substring(i,
-                               i + passageLength)));
+                       .collect(Collectors.groupingBy(
+                               i -> input.substring(i, i + passageLength)
+                       ));
 
         res.entrySet()
-           .removeIf(stringListEntry -> stringListEntry.getValue()
-                                                       .size() <= 1);
+           .removeIf(
+                   stringListEntry -> stringListEntry.getValue()
+                                                     .size() <= 1
+           );
         return res;
     }
 
@@ -108,18 +118,27 @@ public class CryptUtils {
         return fAInput.stream()
                       .map(Map::entrySet)
                       .map(entries -> entries.stream()
-                                             .sorted((o1, o2) -> Long.compare(o2.getValue(),
-                                                     o1.getValue()))
+                                             .sorted((o1, o2) ->
+                                                     Long.compare(
+                                                             o2.getValue(),
+                                                             o1.getValue()
+                                                     ))
                                              .limit(numberOfReturnedTopLetters)
                                              .map(characterLongEntry ->
                                                      Map.entry(
-                                                             shift(characterLongEntry.getKey(),
+                                                             shift(
+                                                                     characterLongEntry.getKey(),
                                                                      keyToShiftWith,
-                                                                     clockwiseShiftDirection),
+                                                                     clockwiseShiftDirection
+                                                             ),
                                                              characterLongEntry.getValue()
                                                      ))
-                                             .collect(Collectors.toMap(Map.Entry::getKey,
-                                                     Map.Entry::getValue)))
+                                             .collect(
+                                                     Collectors.toMap(
+                                                             Map.Entry::getKey,
+                                                             Map.Entry::getValue
+                                                     ))
+                      )
                       .collect(Collectors.toList())
                 ;
     }

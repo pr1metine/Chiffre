@@ -24,7 +24,12 @@ public class VigenereTest {
         result1KeyLen = CryptUtils.frequencyAnalysis(INPUT, 1);
         result8KeyLen = CryptUtils.frequencyAnalysis(INPUT, 8);
         result1MostFreq =
-                CryptUtils.getMostFrequentLetters(result1KeyLen, 2, 'A', true);
+                CryptUtils.getMostFrequentLetters(
+                        result1KeyLen,
+                        2,
+                        'A',
+                        true
+                );
     }
 
     @Test
