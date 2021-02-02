@@ -7,8 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class VigenereTest {
     public static final String INPUT = "HELLOHELLOLOLO";
@@ -24,7 +23,8 @@ public class VigenereTest {
         result2Len = CryptUtils.findReoccurringPassages(INPUT, 2);
         result1KeyLen = CryptUtils.frequencyAnalysis(INPUT, 1);
         result8KeyLen = CryptUtils.frequencyAnalysis(INPUT, 8);
-        result1MostFreq = CryptUtils.getMostFrequentLetters(result1KeyLen, 2, 'A', true);
+        result1MostFreq =
+                CryptUtils.getMostFrequentLetters(result1KeyLen, 2, 'A', true);
     }
 
     @Test
