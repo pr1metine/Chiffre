@@ -35,7 +35,7 @@ public class CryptUtils {
     }
 
     /**
-     * Performs a frequency analysis of a given input.
+     * Performs a frequency analysis on a given input.
      *
      * @param input     Usually an encrypted message
      * @param keyLength When dealing with Vigenère, pass a key length to
@@ -86,6 +86,7 @@ public class CryptUtils {
                    stringListEntry -> stringListEntry.getValue()
                                                      .size() <= 1
            );
+
         return res;
     }
 
