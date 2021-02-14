@@ -23,6 +23,9 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew build
+      - name: Get tag message
+        if: startsWith(github.ref, 'refs/tags/v')
+        run:  git tag -v $(git describe --exact-match HEAD) | tail -c 6 >> CI-generated-CHANGELOG.md
       - name: GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v1
@@ -30,6 +33,6 @@ jobs:
           prerelease: ${{contains(github.ref, '-') || contains(github.ref, 'alpha') || contains(github.ref, 'beta') || contains(github.ref, 'rc')}}
           files: |
             build/distributions/*
-          body: ${{steps.changelog.outputs.changelog}}
+          body_path: CI-generated-CHANGELOG.md
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
