@@ -31,6 +31,47 @@ public class Ed25519 {
 
     private static BigInteger D = BigInteger.valueOf(-121_665).multiply(modp_inv(BigInteger.valueOf(121_666))).mod(P);
 
+    public static class PrivateKey {
+        public BigInteger getA() {
+            return a;
+        }
+
+        public BigInteger getDummy() {
+            return dummy;
+        }
+
+        public PrivateKey(BigInteger a, BigInteger dummy) {
+            this.a = a;
+            this.dummy = dummy;
+        }
+
+        private final BigInteger a;
+        private final BigInteger dummy;
+    }
+
+    public static PrivateKey secret_expand(String sec) {
+        if (sec.length() / 2 != 32) throw new IllegalArgumentException("Invalid input length for compression");
+        return secret_expand(CryptUtils.littleEndianToBigInt(sec));
+    }
+    public static PrivateKey secret_expand(BigInteger sec) {
+        BigInteger h = sha512(sec);
+        BigInteger a = h.and(BigInteger.ONE.shiftLeft(254).subtract(BigInteger.valueOf(8)))
+                .or(BigInteger.ONE.shiftLeft(254));
+
+        BigInteger dummy = h.shiftRight(256);
+        return new PrivateKey(a, dummy);
+    }
+
+    public static byte[] secret_to_public(String sec) {
+        PrivateKey key = secret_expand(sec);
+        return Point.multiply(key.getA(), Point.G).pointCompress();
+    }
+
+    public static byte[] secret_to_public(BigInteger sec) {
+        PrivateKey key = secret_expand(sec);
+        return Point.multiply(key.getA(), Point.G).pointCompress();
+    }
+
     public static BigInteger sign(BigInteger sec, BigInteger msg) {
         return null;
     }
@@ -79,7 +120,7 @@ public class Ed25519 {
             return new Point(e.multiply(f), g.multiply(h), f.multiply(g), e.multiply(h));
         }
 
-        public Point multiply(BigInteger s, Point p) {
+        public static Point multiply(BigInteger s, Point p) {
             Point q = new Point(BigInteger.ZERO, BigInteger.ONE, BigInteger.ONE, BigInteger.ZERO);
 
             while (s.compareTo(BigInteger.ZERO) > 0) {
@@ -128,7 +169,7 @@ public class Ed25519 {
 
         private static final BigInteger G_Y = BigInteger.valueOf(4).multiply(modp_inv(BigInteger.valueOf(5))).mod(P);
         private static final BigInteger G_X = recover_x(G_Y, BigInteger.ZERO);
-        private static final Point G = new Point(G_X, G_Y, BigInteger.ONE, Objects.requireNonNull(G_X).multiply(G_Y).mod(P));
+        public static final Point G = new Point(G_X, G_Y, BigInteger.ONE, Objects.requireNonNull(G_X).multiply(G_Y).mod(P));
 
         public byte[] pointCompress() {
             var z_inv = modp_inv(z);

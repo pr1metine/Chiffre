@@ -169,4 +169,19 @@ public class CryptUtils {
 
         return out;
     }
+
+    // FIXME: Incorrect parsing, need to read up on it
+    public static BigInteger littleEndianToBigInt(String le) {
+        if (le.length() % 2 != 0) {
+            le += '0';
+        }
+
+        byte[] out = new byte[le.length() / 2];
+
+        for (int i = 0; i <= le.length() - 2; i += 2) {
+            out[i / 2] = Byte.parseByte(le.substring(i, i + 1), 16);
+        }
+
+        return littleEndianToBigInt(out);
+    }
 }

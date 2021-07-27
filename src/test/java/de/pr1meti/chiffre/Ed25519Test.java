@@ -9,6 +9,14 @@ import java.math.BigInteger;
 public class Ed25519Test {
 
     @Test
+    void testPrivateToPublic() {
+        String sec = "9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60";
+        String pub = "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a";
+
+        assertEquals(CryptUtils.littleEndianToBigInt(pub), CryptUtils.littleEndianToBigInt(Ed25519.secret_to_public(sec)));
+    }
+
+    @Test
     void test1() {
         BigInteger sec = new BigInteger("9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60", 16);
         BigInteger pub = new BigInteger("d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a", 16);
