@@ -145,14 +145,18 @@ public class CryptUtils {
                 ;
     }
 
-    public static byte[] bigintToLittleEndian(BigInteger n) {
-        byte[] out = new byte[1 + n.bitLength() / 8];
+    public static byte[] bigintToLittleEndian(BigInteger n, int byteLength) {
+        byte[] out = new byte[byteLength];
 
         for (int i = 0; i < n.bitLength(); ++i) {
             out[i / 8] |= n.testBit(i) ? 1 << (7 - i % 8) : 0;
         }
 
         return out;
+    }
+
+    public static byte[] bigintToLittleEndian(BigInteger n) {
+        return bigintToLittleEndian(n, 1 + n.bitLength() / 8);
     }
 
     public static BigInteger littleEndianToBigInt(byte[] le) {
